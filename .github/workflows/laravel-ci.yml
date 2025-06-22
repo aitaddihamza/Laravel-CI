@@ -1,0 +1,33 @@
+name: Laravel CI
+
+on:
+  push:
+    barnches: [ main ]
+
+jobs:
+  build:
+    run-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+
+      - name: Create database
+        run: touch ./database/database.sqlite
+
+      - name: create .env
+        run: cp .env.test .env
+
+      - name: install app
+        run: composer install
+
+      - name: Run migrations
+        run: php artisan migrate
+
+      - name: Test PHPUnit
+        run: ./vendor/bin/phpunit
+
